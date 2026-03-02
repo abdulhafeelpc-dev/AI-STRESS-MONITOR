@@ -3,7 +3,7 @@
  * Logic Layer: Processes facial expression probabilities into actionable states.
  */
 
-export type EmotionState = 'calm' | 'stressed' | 'tired' | 'neutral';
+export type EmotionState = 'calm' | 'stressed' | 'tired' | 'joyful' | 'unsettled' | 'low-mood' | 'neutral';
 
 export interface EmotionData {
   neutral: number;
@@ -18,16 +18,21 @@ export interface EmotionData {
 export class EmotionAnalyzer {
   /**
    * Analyzes raw expression probabilities and returns a classified state.
-   * Logic:
-   * - Stressed: High levels of angry, fearful, or disgusted.
-   * - Tired: High levels of sad or neutral with low energy indicators.
-   * - Calm: High levels of happy or neutral.
    */
   static analyze(expressions: EmotionData): EmotionState {
     const { neutral, happy, sad, angry, fearful, disgusted, surprised } = expressions;
 
+    // High intensity Joy
+    if (happy > 0.8) return 'joyful';
+    
+    // High intensity Sadness
+    if (sad > 0.6) return 'low-mood';
+
+    // High intensity Surprise/Shock
+    if (surprised > 0.6) return 'unsettled';
+
     // Stress Score: Weighted combination of high-arousal negative emotions
-    const stressScore = (angry * 1.5) + (fearful * 1.2) + (disgusted * 1.0) + (surprised * 0.5);
+    const stressScore = (angry * 1.5) + (fearful * 1.2) + (disgusted * 1.0);
     
     // Fatigue Score: Weighted combination of low-arousal negative or flat emotions
     const fatigueScore = (sad * 1.5) + (neutral * 0.8);
@@ -45,6 +50,12 @@ export class EmotionAnalyzer {
 
   static getExplanation(state: EmotionState): string {
     switch (state) {
+      case 'joyful':
+        return "The system detected a high level of positive energy and joy in your expression.";
+      case 'low-mood':
+        return "The system observed signs of sadness or emotional heaviness in your facial features.";
+      case 'unsettled':
+        return "The system detected signs of surprise or sudden cognitive shift, which can feel unsettling.";
       case 'stressed':
         return "The system detected signs of facial tension and high arousal, often associated with stress or anxiety.";
       case 'tired':
@@ -58,6 +69,27 @@ export class EmotionAnalyzer {
 
   static getActionSteps(state: EmotionState): string[] {
     switch (state) {
+      case 'joyful':
+        return [
+          "Take a mental snapshot of this feeling.",
+          "Share this positive energy with someone today.",
+          "Write down one thing that contributed to this joy.",
+          "Keep this momentum going for your next task."
+        ];
+      case 'low-mood':
+        return [
+          "Place a hand over your heart and feel its rhythm.",
+          "Tell yourself: 'It's okay to feel this way right now.'",
+          "Think of a small comfort you can treat yourself to.",
+          "Gentle movement: Roll your shoulders slowly."
+        ];
+      case 'unsettled':
+        return [
+          "5-4-3-2-1 Grounding: Name 5 things you can see.",
+          "Touch something cold or textured near you.",
+          "Take one deep, audible sigh.",
+          "Remind yourself that you are safe in this moment."
+        ];
       case 'stressed':
         return [
           "Inhale slowly through your nose for 4 seconds.",
@@ -86,12 +118,18 @@ export class EmotionAnalyzer {
 
   static getBenefit(state: EmotionState): string {
     switch (state) {
+      case 'joyful':
+        return "Savoring positive emotions builds psychological capital and broadens your creative thinking.";
+      case 'low-mood':
+        return "Self-compassion reduces the 'second arrow' of suffering—the judgment we feel for feeling bad.";
+      case 'unsettled':
+        return "Grounding techniques pull your brain out of 'startle mode' and back into the present reality.";
       case 'stressed':
-        return "Controlled breathing activates the parasympathetic nervous system, lowering your heart rate and cortisol levels.";
+        return "Controlled breathing activates the parasympathetic nervous system, lowering your heart rate.";
       case 'tired':
-        return "The 20-20-20 rule and physical movement reduce digital eye strain and re-oxygenate your blood.";
+        return "Physical breaks reduce digital eye strain and re-oxygenate your blood flow.";
       case 'calm':
-        return "Mindful appreciation strengthens neural pathways associated with resilience and well-being.";
+        return "Mindful appreciation strengthens neural pathways associated with resilience.";
       default:
         return "";
     }

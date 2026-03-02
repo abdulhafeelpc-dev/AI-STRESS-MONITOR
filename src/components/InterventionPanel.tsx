@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { EmotionState, EmotionAnalyzer } from '../logic/EmotionAnalyzer';
-import { Wind, Zap, Sun, Info, CheckCircle2 } from 'lucide-react';
+import { Wind, Zap, Sun, Info, CheckCircle2, Heart, PartyPopper, AlertCircle } from 'lucide-react';
 
 interface InterventionPanelProps {
   state: EmotionState;
@@ -16,6 +16,30 @@ const InterventionPanel: React.FC<InterventionPanelProps> = ({ state }) => {
 
   const getTheme = () => {
     switch (state) {
+      case 'joyful':
+        return {
+          bg: 'bg-pink-950/90',
+          accent: 'text-pink-400',
+          icon: <PartyPopper className="w-6 h-6 text-pink-400" />,
+          title: 'JOYFUL',
+          border: 'border-pink-500/30'
+        };
+      case 'low-mood':
+        return {
+          bg: 'bg-blue-950/90',
+          accent: 'text-blue-400',
+          icon: <Heart className="w-6 h-6 text-blue-400" />,
+          title: 'LOW MOOD',
+          border: 'border-blue-500/30'
+        };
+      case 'unsettled':
+        return {
+          bg: 'bg-purple-950/90',
+          accent: 'text-purple-400',
+          icon: <AlertCircle className="w-6 h-6 text-purple-400" />,
+          title: 'UNSETTLED',
+          border: 'border-purple-500/30'
+        };
       case 'stressed':
         return {
           bg: 'bg-indigo-950/90',
