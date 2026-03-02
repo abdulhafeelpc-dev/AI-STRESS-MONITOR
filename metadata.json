@@ -1,0 +1,7 @@
+{
+  "name": "MoodMirror",
+  "description": "Camera-based mental health micro-intervention system that detects emotional states and provides instant stress-reduction actions.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
